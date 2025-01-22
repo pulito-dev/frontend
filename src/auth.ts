@@ -48,8 +48,16 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                 session.idToken = token?.idToken
                 session.accessToken = token?.idToken
                 session.user = token?.decodedPayload
+
+                // await fetch(`${API_URL}/auth/`, {
+                //     headers: {
+                //         Authorization: `Bearer ${session.idToken}`
+                //     }
+                // })
+
+                console.log(API_URL)
     
-                let response = await fetch(`${API_URL}/users/me`, {
+                let response = await fetch(`${API_URL}/users/me/`, {
                         headers: {
                             Authorization: `Bearer ${session.idToken}`
                         }
