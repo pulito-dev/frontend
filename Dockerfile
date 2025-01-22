@@ -10,6 +10,6 @@ COPY . /app
 
 EXPOSE 5173
 
-RUN npm run check
+RUN npm run prepare
 
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
