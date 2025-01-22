@@ -19,35 +19,53 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     },
     callbacks: {
         async jwt({token, account}) {
-            // console.log(account)
-            if (account) {
-                token.idToken = account.id_token
-                token.accessToken = account.access_token
-
-                // decode jwt
-                const decodedPayload = jose.decodeJwt(account?.id_token)
-                token.decodedPayload = decodedPayload
+            console.log(token)
+            console.log(account);
+            try {
+                if (account) {
+                    token.idToken = account.id_token
+                    token.accessToken = account.access_token
+    
+                    // decode jwt
+                    const decodedPayload = jose.decodeJwt(account?.id_token)
+                    token.decodedPayload = decodedPayload
+                }
             }
+            catch (error)
+            {
+                console.log(error)
+            } 
+
+            console.log(token);
+            console.log(account);
 
             return token
         },
         async session({session, token}) {
-            // console.log(token)
-
-            session.idToken = token?.idToken
-            session.accessToken = token?.idToken
-            session.user = token?.decodedPayload
-
-            let response = await fetch(`${API_URL}/users/me`, {
-                    headers: {
-                        Authorization: `Bearer ${session.idToken}`
-                    }
-            })
-            
-            const user = await response.json()
-            
-            
-            session.dbUser = user
+            console.log(session);
+            console.log(token);
+            try{
+                session.idToken = token?.idToken
+                session.accessToken = token?.idToken
+                session.user = token?.decodedPayload
+    
+                let response = await fetch(`${API_URL}/users/me`, {
+                        headers: {
+                            Authorization: `Bearer ${session.idToken}`
+                        }
+                })
+                
+                const user = await response.json()
+                
+                console.log(user)
+                
+                session.dbUser = user
+            }
+            catch (error) {
+                console.log(error);
+            }
+            console.log(session);
+            console.log(token);
 
             return session
         },
