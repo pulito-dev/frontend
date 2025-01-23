@@ -3,7 +3,7 @@ on:
     - push
 env:
     ECR_REGISTRY: "794038224958.dkr.ecr.eu-central-1.amazonaws.com"
-    ECR_REPOSITORY: "pulito-dev-listing-api"
+    ECR_REPOSITORY: "pulito-dev-frontend"
 
 jobs:
     build-image:
