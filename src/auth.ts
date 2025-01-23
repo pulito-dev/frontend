@@ -19,48 +19,30 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     },
     callbacks: {
         async jwt({token, account}) {
-            console.log(token)
-            console.log(account);
-            try {
-                if (account) {
-                    token.idToken = account.id_token
-                    token.accessToken = account.access_token
-    
-                    // decode jwt
-                    const decodedPayload = jose.decodeJwt(account?.id_token)
-                    token.decodedPayload = decodedPayload
-                }
-            }
-            catch (error)
-            {
-                console.log(error)
-            } 
+            if (account) {
+                token.idToken = account.id_token
+                token.accessToken = account.access_token
 
-            console.log(token);
-            console.log(account);
+                // decode jwt
+                const decodedPayload = jose.decodeJwt(account?.id_token)
+                token.decodedPayload = decodedPayload
+            }
 
             return token
         },
         async session({session, token}) {
-            console.log(session);
-            console.log(token);
             try{
                 session.idToken = token?.idToken
-                session.accessToken = token?.idToken
+                session.accessToken = token?.accessToken
                 session.user = token?.decodedPayload
 
-                // await fetch(`${API_URL}/auth/`, {
-                //     headers: {
-                //         Authorization: `Bearer ${session.idToken}`
-                //     }
-                // })
-
+                console.log(session.idToken)
                 console.log(API_URL)
     
                 let response = await fetch(`${API_URL}/users/me/`, {
-                        headers: {
-                            Authorization: `Bearer ${session.idToken}`
-                        }
+                    headers: {
+                        Authorization: `Bearer ${session.idToken}`
+                    }
                 })
                 
                 const user = await response.json()
@@ -70,10 +52,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                 session.dbUser = user
             }
             catch (error) {
-                console.log(error);
+                console.log("SESSION ERR", error);
             }
-            console.log(session);
-            console.log(token);
 
             return session
         },
